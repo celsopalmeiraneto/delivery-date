@@ -1,6 +1,6 @@
 import { jsonArray } from '../loadCsv';
 import { InputError } from '../InputError';
-import { Product } from '../types';
+import { Product } from '../types/Product';
 
 export class ProductMapper {
   static async getProduct(id: string): Promise<Product> {
@@ -12,12 +12,7 @@ export class ProductMapper {
       throw new InputError(`There is not product with id ${id}.`);
     }
 
-    const product: Product = {
-      id,
-      supplierIds: [],
-      inventory: {},
-      totalInventory: 0,
-    };
+    const product: Product = new Product(id);
 
     rawData.forEach((rawLine) => {
       if (!product.inventory[rawLine.supplier]) {

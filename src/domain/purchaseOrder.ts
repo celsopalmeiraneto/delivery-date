@@ -2,13 +2,13 @@ import { ProductMapper } from '../mappers/ProductMapper';
 import { InputError } from '../InputError';
 import { SupplierMapper } from '../mappers/SupplierMapper';
 import {
-  Product,
   PurchaseOrderItem,
   PurchaseOrderShipment,
   SupplierEstimate,
 } from '../types';
 import { getShipmentsFromEstimates } from './shipments';
 import moment from 'moment';
+import { Product } from '../types/Product';
 
 const groupItemsByProduct = (
   items: PurchaseOrderItem[]

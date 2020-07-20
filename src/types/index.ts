@@ -5,15 +5,6 @@ export type ParcelEstimate = {
   supplierId: string;
 };
 
-export type Product = {
-  id: string;
-  supplierIds: string[];
-  inventory: {
-    [supplierId: string]: number;
-  };
-  totalInventory: number;
-};
-
 export type PurchaseOrderItem = {
   productId: string;
   amount: number;
