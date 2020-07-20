@@ -74,12 +74,16 @@ const fasterDeliveryParcelsStrategy: ShipmentStrategy = (estimates, items) => {
   return pickedParcels;
 };
 
+const filterDeliveredItems = (
+  items: PurchaseOrderItem[]
+): PurchaseOrderItem[] => items.filter((item) => item.amount > 0);
+
 const atLeastTwoProductsStrategy: ShipmentStrategy = (
   estimates,
   items,
   shipments
 ) => {
-  const itemsForDelivery = items.filter((item) => item.amount > 0);
+  const itemsForDelivery = filterDeliveredItems(items);
 
   const estimatesLargerThanOneItem = estimates.filter((estimate) => {
     const itemsCount: number = estimate.parcels.reduce((acc, v) => {
@@ -112,6 +116,44 @@ const atLeastTwoProductsStrategy: ShipmentStrategy = (
         item.amount <= parcel.amountAvailable
     );
   });
+};
+
+const allInventoryOfSupplierStrategy: ShipmentStrategy = (estimates, items) => {
+  const itemsForDelivery = filterDeliveredItems(items);
+  const availableParcels = estimates
+    .flatMap((estimate) => estimate.parcels)
+    .filter((parcel) => parcel.amountAvailable > 0)
+    .sort((parcelA, parcelB) => {
+      if (parcelA.amountAvailable > parcelB.amountAvailable) return 1;
+
+      if (parcelA.amountAvailable < parcelB.amountAvailable) return -1;
+
+      return 0;
+    });
+
+  const pickedParcels: ParcelEstimate[] = [];
+
+  availableParcels.forEach((parcel) => {
+    const item = itemsForDelivery.find(
+      (item) => item.productId === parcel.productId
+    );
+
+    if (!item) return;
+
+    const amountAlreadyPicked: number = pickedParcels.reduce((acc, picked) => {
+      if (picked.productId === parcel.productId) {
+        acc += picked.amountAvailable;
+      }
+
+      return acc;
+    }, 0);
+
+    if (amountAlreadyPicked >= item.amount) return;
+
+    pickedParcels.push(parcel);
+  });
+
+  return pickedParcels;
 };
 
 const addParcelToShipment = (
@@ -182,9 +224,11 @@ export const getShipmentsFromEstimates = (
   const parcels01 = fasterDeliveryParcelsStrategy(estimates, items, shipments);
   addToShipmentsAndSubtractFromItems(parcels01, shipments, items);
 
-  console.log(estimates, items, shipments);
   const parcels02 = atLeastTwoProductsStrategy(estimates, items, shipments);
   addToShipmentsAndSubtractFromItems(parcels02, shipments, items);
+
+  const parcels03 = allInventoryOfSupplierStrategy(estimates, items, shipments);
+  addToShipmentsAndSubtractFromItems(parcels03, shipments, items);
 
   return shipments;
 };
