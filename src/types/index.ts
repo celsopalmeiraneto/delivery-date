@@ -43,5 +43,9 @@ export type SupplierProduct = {
 };
 
 export interface ShipmentStrategy {
-  (estimates: SupplierEstimate[], items: PurchaseOrderItem[]): ParcelEstimate[];
+  (
+    estimates: SupplierEstimate[],
+    items: PurchaseOrderItem[],
+    shipments: Shipment[]
+  ): ParcelEstimate[];
 }

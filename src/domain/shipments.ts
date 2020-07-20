@@ -74,8 +74,44 @@ const fasterDeliveryParcelsStrategy: ShipmentStrategy = (estimates, items) => {
   return pickedParcels;
 };
 
-const leastShipmentsStrategy: ShipmentStrategy = (estimates, items) => {
-  return [];
+const atLeastTwoProductsStrategy: ShipmentStrategy = (
+  estimates,
+  items,
+  shipments
+) => {
+  const itemsForDelivery = items.filter((item) => item.amount > 0);
+
+  const estimatesLargerThanOneItem = estimates.filter((estimate) => {
+    const itemsCount: number = estimate.parcels.reduce((acc, v) => {
+      const deliverables: number = itemsForDelivery.filter(
+        (it) => it.productId === v.productId && v.amountAvailable >= it.amount
+      ).length;
+
+      const delivered: number = shipments.reduce((acc, shipment) => {
+        if (shipment.supplierId === v.supplierId) {
+          acc += shipment.items.length;
+        }
+        return acc;
+      }, 0);
+
+      acc += deliverables + delivered;
+      return acc;
+    }, 0);
+
+    return itemsCount > 1;
+  });
+
+  const parcels: ParcelEstimate[] = estimatesLargerThanOneItem.flatMap(
+    (estimate) => estimate.parcels
+  );
+
+  return parcels.filter((parcel) => {
+    return itemsForDelivery.find(
+      (item) =>
+        item.productId === parcel.productId &&
+        item.amount <= parcel.amountAvailable
+    );
+  });
 };
 
 const addParcelToShipment = (
@@ -143,8 +179,12 @@ export const getShipmentsFromEstimates = (
 
   const shipments: Shipment[] = [];
 
-  const parcels = fasterDeliveryParcelsStrategy(estimates, items);
-  addToShipmentsAndSubtractFromItems(parcels, shipments, items);
+  const parcels01 = fasterDeliveryParcelsStrategy(estimates, items, shipments);
+  addToShipmentsAndSubtractFromItems(parcels01, shipments, items);
+
+  console.log(estimates, items, shipments);
+  const parcels02 = atLeastTwoProductsStrategy(estimates, items, shipments);
+  addToShipmentsAndSubtractFromItems(parcels02, shipments, items);
 
   return shipments;
 };
