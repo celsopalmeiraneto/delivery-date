@@ -16,7 +16,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/PurchaseOrder'
         '400':
           description: Bad request
           content:
@@ -28,8 +28,15 @@ components:
     PurchaseOrder:
       properties:
         region:
-          format: string
+          type: string
         basket:
           type: object
           properties:
-            items: ty
+            items:
+              type: array
+              items:
+                properties:
+                  produsct:
+                    type: string
+                  ciount:
+                    type: number

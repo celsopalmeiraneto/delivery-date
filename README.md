@@ -23,6 +23,8 @@ To change the database change the contents of `mocks/db.csv`. **Don't forget to 
 
 ## The API
 
+There is only one endpoint, the `/purchase-order`. You can take a look at a very primitive documentation at the `openapi.yaml`.
+
 ## The Architecture
 
 ### Domain Logic
@@ -38,3 +40,11 @@ From all the Data Source access patterns my favorite is the Data Mapper. However
 ### Why TypeScript?
 
 Typescript comes with a cost, however, in the medium-long run I think (just my observations, no controlled experiment here) it pays off. The type checking is great, helps avoiding a lot of pitfalls and TypeScript is flexible enough to still feel like JS.
+
+## TODO
+
+There are a lot of room for improvement.
+
+- `src/index/ts` should be the entry point for all 'future' calls. Each API endpoint should implement a Router, with the correct marshalling and unmarshalling to the external world.
+- Improve Mappers. They are powerful and beatiful.
+- Create more integration tests.
