@@ -12,6 +12,10 @@ yarn
 yarn start
 ```
 
+## Tests
+
+Run `yarn run test` to run the tests.
+
 ## Environment Variables
 
 `PORT`: The port where the API will run. Defaults to 8000.
