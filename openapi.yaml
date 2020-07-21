@@ -1,0 +1,35 @@
+openapi: 3.0.3
+info:
+  title: Delivery Date
+  version: 1.0.0
+  contact:
+    name: Celso Neto
+    url: https://github.com/celsopalmeiraneto/delivery-date
+paths:
+  /purchase-order:
+    post:
+      description: Post a purchase order for suppliers.
+      operationId: purchase-order-post
+      responses:
+        '200':
+          description: The shipment information.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    PurchaseOrder:
+      properties:
+        region:
+          format: string
+        basket:
+          type: object
+          properties:
+            items: ty

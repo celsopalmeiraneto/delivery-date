@@ -21,6 +21,8 @@ yarn start
 All application data is loaded into memory in the 'boot' of the application.
 To change the database change the contents of `mocks/db.csv`. **Don't forget to stop and run the application again.**
 
+## The API
+
 ## The Architecture
 
 ### Domain Logic
@@ -35,4 +37,4 @@ From all the Data Source access patterns my favorite is the Data Mapper. However
 
 ### Why TypeScript?
 
-Typescript comes with a cost, however, in the medium-long run I think (just my observations, no controlled experiment here) it pays off. The type checking is great, helps avoiding a lot of pitfalls.
+Typescript comes with a cost, however, in the medium-long run I think (just my observations, no controlled experiment here) it pays off. The type checking is great, helps avoiding a lot of pitfalls and TypeScript is flexible enough to still feel like JS.
