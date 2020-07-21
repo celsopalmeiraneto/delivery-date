@@ -40,3 +40,7 @@ export interface ShipmentStrategy {
     shipments: Shipment[]
   ): ParcelEstimate[];
 }
+
+export interface Mapper<T> {
+  getById: (id: string) => Promise<T>;
+}

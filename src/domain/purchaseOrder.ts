@@ -33,7 +33,7 @@ const getProductsOfOrderAndCheckInventory = async (
 ) => {
   return await Promise.all(
     items.map(async (item) => {
-      const product = await ProductMapper.getProduct(item.productId);
+      const product = await new ProductMapper().getById(item.productId);
 
       if (product.totalInventory < item.amount) {
         throw new InputError(
@@ -71,7 +71,7 @@ const getEstimates = async (
 ): Promise<SupplierEstimate[]> => {
   return Promise.all(
     Object.entries(productsBySupplier).map(async ([supplierId, products]) => {
-      const supplier = await SupplierMapper.getSupplier(supplierId);
+      const supplier = await new SupplierMapper().getById(supplierId);
 
       return {
         supplierId,

@@ -1,9 +1,10 @@
 import { jsonArray } from '../loadCsv';
 import { InputError } from '../InputError';
 import { Product } from '../types/Product';
+import { Mapper } from '../types';
 
-export class ProductMapper {
-  static async getProduct(id: string): Promise<Product> {
+export class ProductMapper implements Mapper<Product> {
+  async getById(id: string) {
     const rawData: any[] = (await jsonArray).filter(
       (i) => i.product_name === id
     );
